@@ -924,6 +924,37 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'kevinhwang91/nvim-ufo',
+    dependencies = {
+      'kevinhwang91/promise-async',
+    },
+    config = function()
+      vim.o.foldcolumn = '1'
+      vim.o.foldlevel = 99
+      vim.o.foldlevelstart = 99
+      vim.o.foldenable = true
+
+      vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+      vim.keymap.set('n', 'zr', require('ufo').openFoldsExceptKinds)
+      vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+      vim.keymap.set('n', 'zm', require('ufo').closeFoldsWith)
+      vim.keymap.set('n', 'zK', function()
+        local winid = require('ufo').peekFoldedLinesUnderCursor()
+        if not winid then
+          vim.lsp.buf.hover()
+        end
+      end, { desc = 'Peek fold using lsp buffer' })
+
+      ---@diagnostic disable-next-line: missing-fields
+      require('ufo').setup {
+        provider_selector = function()
+          return { 'lsp', 'indent' }
+        end,
+      }
+    end,
+  },
+
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
