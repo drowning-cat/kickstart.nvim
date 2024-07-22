@@ -142,8 +142,15 @@ vim.opt.splitbelow = true
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
+local listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+local listchars_with_eol = { eol = '¶', tab = '» ', trail = '·', nbsp = '␣' }
+
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = listchars_with_eol
+
+vim.keymap.set('n', '<leader>tp', function()
+  vim.opt.listchars = vim.opt.listchars:get().eol and listchars or listchars_with_eol
+end, { desc = '[T]oggle [P]aragraph' })
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
