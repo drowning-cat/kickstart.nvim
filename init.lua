@@ -850,6 +850,10 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-context',
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     build = ':TSUpdate',
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
@@ -871,6 +875,16 @@ require('lazy').setup({
       require('nvim-treesitter.install').prefer_git = true
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
+
+      -- Show code context at the top
+      require('treesitter-context').setup {
+        multiline_threshold = 1,
+        max_lines = 0,
+        trim_scope = 'outer',
+      }
+      vim.keymap.set('n', '[c', function()
+        require('treesitter-context').go_to_context(vim.v.count1)
+      end, { silent = true })
 
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -905,22 +919,6 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
 
   -- [[ User plugins ]]
-  {
-    'nvim-treesitter/nvim-treesitter-context',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    config = function()
-      require('treesitter-context').setup {
-        multiline_threshold = 1,
-        max_lines = 0,
-        trim_scope = 'outer',
-      }
-    end,
-  },
-
-  {
-    'nvim-treesitter/nvim-treesitter-textobjects',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
